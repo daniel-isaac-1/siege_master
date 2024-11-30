@@ -10,7 +10,7 @@ def main():
 
     # Set up the display
     WIDTH, HEIGHT = 800, 600
-    WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+    WINDOW = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
     pygame.display.set_caption("Siege Master")
 
     # Define colors
@@ -45,7 +45,11 @@ def main():
                 running = False
                 pygame.quit()
                 sys.exit()
-
+            elif event.type == pygame.VIDEORESIZE:
+                WINDOW = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                WIDTH, HEIGHT = WINDOW.get_size()
+                # If you have a background image, rescale it
+                background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
