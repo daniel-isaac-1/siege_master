@@ -16,6 +16,8 @@ def main():
     # Define colors
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    BUTTON_NORMAL = (100, 100, 100)  # Original grey
+    BUTTON_HOVER = (70, 70, 70)      # Darker grey on hover
 
     # Define fonts
     TITLE_FONT = pygame.font.SysFont("arial", 72)
@@ -62,19 +64,21 @@ def main():
         start_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 - 50, 200, 50)
         exit_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 20, 200, 50)
 
-        # Draw semi-transparent overlay behind buttons
-        buttons_bg = pygame.Surface((200, 130), pygame.SRCALPHA)
-        buttons_bg.fill((0, 0, 0, 150))
-        WINDOW.blit(buttons_bg, (WIDTH // 2 - 100, HEIGHT // 2 - 60))
+        # ===== Removed the semi-transparent overlay behind buttons =====
+        # # Draw semi-transparent overlay behind buttons
+        # buttons_bg = pygame.Surface((200, 130), pygame.SRCALPHA)
+        # buttons_bg.fill((0, 0, 0, 150))
+        # WINDOW.blit(buttons_bg, (WIDTH // 2 - 100, HEIGHT // 2 - 60))
+        # ================================================================
 
         # Draw buttons
         # Start button
         if start_button.collidepoint((mx, my)):
-            pygame.draw.rect(WINDOW, (70, 70, 70), start_button)
+            pygame.draw.rect(WINDOW, BUTTON_HOVER, start_button)
             if click:
                 show_top_menu(WINDOW)
         else:
-            pygame.draw.rect(WINDOW, (100, 100, 100), start_button)
+            pygame.draw.rect(WINDOW, BUTTON_NORMAL, start_button)
 
         start_text = BUTTON_FONT.render("Start", True, WHITE)
         start_rect = start_text.get_rect(center=start_button.center)
@@ -82,13 +86,13 @@ def main():
 
         # Exit button
         if exit_button.collidepoint((mx, my)):
-            pygame.draw.rect(WINDOW, (70, 70, 70), exit_button)
+            pygame.draw.rect(WINDOW, BUTTON_HOVER, exit_button)
             if click:
                 running = False
                 pygame.quit()
                 sys.exit()
         else:
-            pygame.draw.rect(WINDOW, (100, 100, 100), exit_button)
+            pygame.draw.rect(WINDOW, BUTTON_NORMAL, exit_button)
 
         exit_text = BUTTON_FONT.render("Exit", True, WHITE)
         exit_rect = exit_text.get_rect(center=exit_button.center)
