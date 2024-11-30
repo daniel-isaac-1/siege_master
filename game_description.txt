@@ -1,0 +1,35 @@
+Game Name : Siege Master
+
+The human player plays against one computer on each level. Players can choose two modes (defender and attacker). There is a separate campaign for each. Each campaign will consist of 10 levels. There is a custom game mode where you can pick if you want to be the defender or the attacker, the starting money for the player, and which units (and if applicable, castle) the other player has. Alternatively in the custom game mode, you can just pick how much money the enemy has and it will automatically decide which units to build (and if the defender, what castle to build). 
+
+Now I will describe the units available. 
+
+swordsmen : available to both the attacker and defender. 150 HP. 5 damage per second. attacks once per 2 seconds. attack radius is 1 meter. cost = 1. speed = 0.5 meters per second.
+
+archers : available to both the attacker and defender. 50 HP. 20 damage per second. attacks once per 10 seconds. attack radius is 30 meters if on same ground. 20 meters if on lower ground. 50 meters if on higher ground. Damage multiplier for being on higher ground is 1.5X. damage multiplier for being on lower ground is 0.5X. cost = 2. speed = 1 meter per second.
+
+catapults : available only to the attacker. 600 damage per attack (attacks once per minute). 1000 HP. Can attack castle as well as people. attack radius is 55 meters. Attacks land randomly within a circle of radius 10 meters within the desired strike location. cost = 15. speed = 0.1 meters per second.
+
+battering ram : available only to the attacker. 400 damage per attack (attacks once per 15 seconds). Attack radius is 1 meter. 1500 HP. cost = 15. speed = 0.1 meters per second.
+
+stone : available only to the defender. cost = 1 building material. HP = 1200. attack = 0. speed = 0.
+
+portcullis : available only to the defender. cost = 15 building material (max can build 2). HP = 3000. attack = 0. speed = 0.
+
+other unit ideas : siege ladder? knight? king/prince? wizard? dragon? hot oil?
+
+Should be able to save your progress with a load file specified by a game file name of the user's choice. 
+
+When building a castle, there are multiple types of things you can build that count as "stone" and cost 1 building material. A wall (which can be walked on) is one option. A staircase is another option. The maximum number of stories the player can build is 3. two stairs cannot be placed right next to each other. Stair blocks can only be entered and exited from opposite ends (one goes up and one goes down). The defender can also build a moat (which costs 1 building material). Attackers can fill in moats at a rate of 1 unit per 10 seconds. There is a maximum number of moat squares you can build, it is 200. 
+
+Win conditions : The attacker wins if they capture the defender's flag, or if they kill all of the defender's troops. The defender can place the flag anywhere they wish inside the castle. The defender wins if the attacker loses all of their troops.
+
+Building rules : A player cannot place the flag that is completely separated off from the attacker (e.g. it cannot be completely walled in). Similarly no defending troops can be placed anywhere that is completely closed off from the attacker. 
+
+Gameplay : The player can choose if they want to control their units or if they want to allow the computer to control their units for them. They can also skip watching the battle altogether in this case and just see who wins in the end. In custom game mode, the player can control how difficult the enemy CPU is (easy/medium/hard). If they choose to let the CPU control their own units, they can also choose the intelligence of that CPU separately (novice/average/expert). These three settings would be equivalent in terms of intelligence and logic. In other words, novice = easy and average = medium and expert = hard. The game has no fog of war. If a catapult damages a wall or stair, then a soldier on that destroyed location can access all adjacent locations regardless of their height. There is an option during gameplay to select the speed at which time passes. It should range from 10x slower than real time to 10x faster than real time. 
+
+At the main screen, you can choose to load a game or start a new game. If you choose to load a game, it will show you all of the saved game names, and you can pick which one you want. Or you can click "back". If you save in the middle of a battle, then loading will bring you into that battle where you left off. Otherwise it will just bring you back to your current progress in the campaigns. Once you get passed this screen, then you enter the game choice screen. Here you can choose campaign mode or custom game mode or "shop". Once you click on either, then there are buttons to select if you want to be the attacker, defender, or go back a screen. Once you make this selection, if you are in campaign mode, it will show all 10 battles you can play. But locked battles are greyed out. In order to unlock a battle, you have to beat the previous battle. You can click on whichever battle you want to play. They are squares with numbers from 1 to 10. If you instead chose to go into custom game mode, then you get to choose the custom game options specified earlier. IF you choose to go into the shop, there is a button to go back. There is also a button to buy "dragon units". When you click on this button, nothing happens though. 
+
+Once the game starts, the first step is to build your castle. The 2nd step is to pick your units. The 3rd step is to play the battle. 
+
+I'd like the code to be organized fairly well. I'd like different parts of the code in different python files. Please accommodate this and tell me which code block goes in which file. Please have a file named main.py and I will run the game by typing in "python game.py". This will control the first title screen. Please have another file named "top_menu.py" to control the screen with campaign/custom/shop. Please have shop.py to control the shop code. Please have campaign.py to control the campaign selection code. Please have custom.py to control the custom game creation options. Please have units.py to store unit attributes. Please have battle_main.py to control the full battle process. Please have castle_build.py to control the castle building and unit_selection.py to control unit selection. please have battle.py to control the actual battle logic. 
