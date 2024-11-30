@@ -2,9 +2,6 @@
 import os
 import sys
 import pygame
-from castle_build import build_castle
-from unit_selection import select_units
-from battle import start_battle
 
 def campaign_mode(WINDOW):
     # Initialize Pygame if not already initialized
@@ -43,7 +40,9 @@ def campaign_mode(WINDOW):
 
     running = True
     while running:
-        # Handle window resize
+        click = False  # Reset click at the start of each frame
+
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -52,6 +51,7 @@ def campaign_mode(WINDOW):
             elif event.type == pygame.VIDEORESIZE:
                 WINDOW = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 WIDTH, HEIGHT = WINDOW.get_size()
+                # Rescale background image
                 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -59,7 +59,6 @@ def campaign_mode(WINDOW):
 
         # Get mouse position
         mx, my = pygame.mouse.get_pos()
-        click = False
 
         # Draw background image
         WINDOW.blit(background_image, (0, 0))
@@ -74,9 +73,20 @@ def campaign_mode(WINDOW):
         title_rect = title_surface.get_rect(center=(WIDTH // 2, HEIGHT // 8))
         WINDOW.blit(title_surface, title_rect)
 
-        # Choose your role
+        # Draw "Choose Your Role" text
         role_text = BUTTON_FONT.render("Choose Your Role:", True, WHITE)
         role_rect = role_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+
+        # Create a semi-transparent grey bar behind the text
+        padding = 20
+        role_bar_width = role_rect.width + padding * 2
+        role_bar_height = role_rect.height + padding
+        role_bar = pygame.Surface((role_bar_width, role_bar_height), pygame.SRCALPHA)
+        role_bar.fill(TEXT_BAR_COLOR)
+        role_bar_rect = role_bar.get_rect(center=role_rect.center)
+
+        # Blit the bar and then the text
+        WINDOW.blit(role_bar, role_bar_rect)
         WINDOW.blit(role_text, role_rect)
 
         # Define role buttons
@@ -96,21 +106,7 @@ def campaign_mode(WINDOW):
             button_rect = button_text.get_rect(center=button["rect"].center)
             WINDOW.blit(button_text, button_rect)
 
-        # Event handling after drawing
-        click = False
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.VIDEORESIZE:
-                WINDOW = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-                WIDTH, HEIGHT = WINDOW.get_size()
-                background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
-
+        # After drawing, handle clicks
         if click:
             for button in role_buttons:
                 if button["rect"].collidepoint((mx, my)):
@@ -125,9 +121,8 @@ def campaign_mode(WINDOW):
 def select_battle(WINDOW, role):
     WIDTH, HEIGHT = WINDOW.get_size()
 
-    # Define colors and fonts (same as before)
+    # Define colors and fonts
     WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
     BUTTON_NORMAL = (100, 100, 100)
     BUTTON_HOVER = (70, 70, 70)
     TEXT_BAR_COLOR = (128, 128, 128, 180)
@@ -135,9 +130,16 @@ def select_battle(WINDOW, role):
     BUTTON_FONT = pygame.font.SysFont("arial", 32)
     MENU_FONT = pygame.font.SysFont("arial", 48)
 
-    # Load background image
+    # Load background image based on role
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    image_path = os.path.join(script_dir, '..', 'images', 'campaign.jpg')
+    if role == 'attacker':
+        image_name = 'attacker.jpg'
+    elif role == 'defender':
+        image_name = 'defender.jpg'
+    else:
+        image_name = 'campaign.jpg'  # Fallback in case of unexpected role
+
+    image_path = os.path.join(script_dir, '..', 'images', image_name)
 
     if not os.path.exists(image_path):
         print(f"Background image not found at {image_path}")
@@ -154,7 +156,9 @@ def select_battle(WINDOW, role):
 
     running = True
     while running:
-        # Handle window resize
+        click = False  # Reset click at the start of each frame
+
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -170,7 +174,6 @@ def select_battle(WINDOW, role):
 
         # Get mouse position
         mx, my = pygame.mouse.get_pos()
-        click = False
 
         # Draw background image
         WINDOW.blit(background_image, (0, 0))
@@ -229,68 +232,11 @@ def select_battle(WINDOW, role):
         back_rect = back_text.get_rect(center=back_button["rect"].center)
         WINDOW.blit(back_text, back_rect)
 
-        # Event handling after drawing
-        click = False
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.VIDEORESIZE:
-                WINDOW = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-                WIDTH, HEIGHT = WINDOW.get_size()
-                background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
-
+        # After drawing, handle clicks
         if click:
-            for button in buttons:
-                if button["rect"].collidepoint((mx, my)):
-                    if not button["locked"]:
-                        start_battle_process(WINDOW, role, button["battle_num"])
-                    else:
-                        # Display locked message
-                        display_locked_message(WINDOW)
             if back_button["rect"].collidepoint((mx, my)):
                 running = False
                 return
+            # Battle buttons do nothing when clicked
 
         pygame.display.update()
-
-def start_battle_process(WINDOW, role, battle_num):
-    # Placeholder function to start the battle process
-    # You can implement the battle setup phases here
-    print(f"Starting Battle {battle_num} as {role.capitalize()}...")
-    # For now, just display a message or proceed to the next step
-
-def display_locked_message(WINDOW):
-    # Display a temporary message that the battle is locked
-    WIDTH, HEIGHT = WINDOW.get_size()
-    MESSAGE_FONT = pygame.font.SysFont("arial", 36)
-    message_text = "Battle Locked!"
-    text_surface = MESSAGE_FONT.render(message_text, True, (255, 0, 0))
-    text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-
-    # Semi-transparent overlay
-    overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 150))
-
-    # Display the message for 2 seconds
-    start_time = pygame.time.get_ticks()
-    display_duration = 2000  # milliseconds
-    displaying = True
-
-    while displaying:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        # Draw the overlay and message
-        WINDOW.blit(overlay, (0, 0))
-        WINDOW.blit(text_surface, text_rect)
-        pygame.display.update()
-
-        if pygame.time.get_ticks() - start_time > display_duration:
-            displaying = False
