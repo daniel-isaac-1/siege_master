@@ -24,8 +24,9 @@ def main():
     TITLE_FONT = pygame.font.SysFont("arial", 72)
     BUTTON_FONT = pygame.font.SysFont("arial", 36)
 
-    # Set button volume (0.0 to 1.0)
-    button_volume = 0.5  # Adjust this value as needed
+    # Set volumes (0.0 to 1.0)
+    button_volume = 0.5  # Volume for button click sound
+    music_volume = 0.5   # Volume for background music
 
     # Load background image
     # Calculate the path to the image relative to this file
@@ -42,6 +43,15 @@ def main():
     else:
         button_sound = pygame.mixer.Sound(sound_path)
         button_sound.set_volume(button_volume)
+
+    # Load background music
+    music_path = os.path.join(script_dir, '..', 'sounds', 'menu_music.wav')
+    if not os.path.exists(music_path):
+        print(f"Music file not found at {music_path}")
+    else:
+        pygame.mixer.music.load(music_path)
+        pygame.mixer.music.set_volume(music_volume)
+        pygame.mixer.music.play(-1)  # -1 means loop indefinitely
 
     # Main loop
     running = True
